@@ -1,0 +1,23 @@
+import React from 'react';
+
+function Error({ title = 'Something went wrong', message, onRetry, retryLabel = 'Try again' }) {
+  return (
+    <div className="error-root" role="alert">
+      <div className="error-title">{title}</div>
+      {message && <div className="error-message">{message}</div>}
+      {onRetry && (
+        <div className="error-actions">
+          <button
+            type="button"
+            className="button button-sm button-ghost"
+            onClick={onRetry}
+          >
+            {retryLabel}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Error;
