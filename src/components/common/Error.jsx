@@ -1,8 +1,11 @@
 import React from 'react';
 
-function Error({ title = 'Something went wrong', message, onRetry, retryLabel = 'Try again' }) {
+function Error({ title = 'We ran into an issue', message, onRetry, retryLabel = 'Try again' }) {
   return (
     <div className="error-root" role="alert">
+      <div className="error-icon" aria-hidden="true">
+        ⚠️
+      </div>
       <div className="error-title">{title}</div>
       {message && <div className="error-message">{message}</div>}
       {onRetry && (

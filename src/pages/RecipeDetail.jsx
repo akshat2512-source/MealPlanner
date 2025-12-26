@@ -5,6 +5,7 @@ import Error from '../components/common/Error.jsx';
 import { lookupMealById } from '../api/mealdb.js';
 import { parseIngredientsFromMeal } from '../utils/ingredientParser.js';
 import { useMealPlan } from '../context/MealPlanContext.jsx';
+import { useFavorites } from '../context/FavoritesContext.jsx';
 import { DAYS, DAY_FULL_LABELS } from '../utils/constants.js';
 
 function RecipeDetail() {
@@ -15,7 +16,9 @@ function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDay, setSelectedDay] = useState('monday');
+  const [showAddToast, setShowAddToast] = useState(false);
   const { addMealToDay } = useMealPlan();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     let active = true;
@@ -27,8 +30,9 @@ function RecipeDetail() {
         if (!active) {
           return;
         }
+
         if (!result) {
-          setError('Recipe not found');
+          setError("We couldn't find that recipe.");
           setMeal(null);
           setIngredients([]);
           return;
@@ -40,7 +44,9 @@ function RecipeDetail() {
         if (!active) {
           return;
         }
-        setError(errorValue.message || 'Unable to load recipe');
+        setError(
+          errorValue.message || "We couldn't load this recipe. Please try again."
+        );
       })
       .finally(() => {
         if (!active) {
@@ -53,6 +59,20 @@ function RecipeDetail() {
       active = false;
     };
   }, [id]);
+
+  useEffect(() => {
+    if (!showAddToast) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      setShowAddToast(false);
+    }, 2400);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [showAddToast]);
 
   const instructionsParagraphs = useMemo(() => {
     if (!meal || !meal.strInstructions) {
@@ -77,6 +97,14 @@ function RecipeDetail() {
       ingredients,
     };
     addMealToDay(selectedDay, mealForPlan);
+    setShowAddToast(true);
+  };
+
+  const handleToggleFavorite = () => {
+    if (!meal) {
+      return;
+    }
+    toggleFavorite(meal);
   };
 
   if (loading) {
@@ -93,7 +121,7 @@ function RecipeDetail() {
           lookupMealById(id)
             .then(result => {
               if (!result) {
-                setError('Recipe not found');
+                setError("We couldn't find that recipe.");
                 setMeal(null);
                 setIngredients([]);
                 return;
@@ -102,7 +130,10 @@ function RecipeDetail() {
               setIngredients(parseIngredientsFromMeal(result));
             })
             .catch(errorValue => {
-              setError(errorValue.message || 'Unable to load recipe');
+              setError(
+                errorValue.message ||
+                  "We couldn't load this recipe. Please try again."
+              );
             })
             .finally(() => setLoading(false));
         }}
@@ -110,10 +141,12 @@ function RecipeDetail() {
     );
   }
 
+  const isMealFavorite = isFavorite(meal.idMeal);
+
   if (!meal) {
     return (
       <Error
-        message="Recipe not found."
+        message="We couldn't find that recipe."
         onRetry={() => navigate('/')}
         retryLabel="Back to search"
       />
@@ -164,14 +197,13 @@ function RecipeDetail() {
               </div>
               <div className="detail-actions">
                 <label htmlFor="day-select" className="page-subtitle">
-                  Add to day
+                  Choose a day for this meal
                 </label>
                 <select
                   id="day-select"
                   value={selectedDay}
                   onChange={event => setSelectedDay(event.target.value)}
-                  className="input-field"
-                  style={{ maxWidth: '11rem', boxShadow: 'none' }}
+                  className="input-field detail-day-select"
                 >
                   {DAYS.map(key => (
                     <option key={key} value={key}>
@@ -181,10 +213,23 @@ function RecipeDetail() {
                 </select>
                 <button
                   type="button"
-                  className="button button-primary"
+                  className="button button-primary detail-primary-cta"
                   onClick={handleAddToPlan}
                 >
                   Add to meal plan
+                </button>
+                <button
+                  type="button"
+                  className={
+                    isMealFavorite
+                      ? 'button button-ghost detail-favorite-active'
+                      : 'button button-ghost'
+                  }
+                  onClick={handleToggleFavorite}
+                  aria-pressed={isMealFavorite}
+                >
+                  <span aria-hidden="true">{isMealFavorite ? '★' : '☆'}</span>
+                  <span>{isMealFavorite ? 'Saved to favorites' : 'Save to favorites'}</span>
                 </button>
               </div>
             </div>
@@ -192,7 +237,7 @@ function RecipeDetail() {
 
           <div className="detail-columns" style={{ marginTop: '1.5rem' }}>
             <section>
-              <h2 className="detail-section-title">Ingredients</h2>
+              <h2 className="detail-section-title">What you'll need</h2>
               <ul className="ingredients-list">
                 {ingredients.map(ingredient => (
                   <li key={ingredient.name} className="ingredient-item">
@@ -205,7 +250,7 @@ function RecipeDetail() {
               </ul>
             </section>
             <section>
-              <h2 className="detail-section-title">Instructions</h2>
+              <h2 className="detail-section-title">How to make it</h2>
               <div className="instructions-text">
                 {instructionsParagraphs.map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
@@ -215,6 +260,28 @@ function RecipeDetail() {
           </div>
         </div>
       </div>
+      <div className="detail-bottom-cta">
+        <div className="detail-bottom-cta-inner">
+          <div className="detail-bottom-cta-label">
+            Add this meal to your weekly planner
+          </div>
+          <button
+            type="button"
+            className="button button-primary"
+            onClick={handleAddToPlan}
+          >
+            Add to planner
+          </button>
+        </div>
+      </div>
+      {showAddToast && (
+        <div className="toast toast-success" role="status">
+          <span className="toast-dot" aria-hidden="true" />
+          <span>
+            Successfully added to {DAY_FULL_LABELS[selectedDay]}.
+          </span>
+        </div>
+      )}
     </div>
   );
 }

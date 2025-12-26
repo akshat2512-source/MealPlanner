@@ -1,20 +1,17 @@
 import React from 'react';
 import WeeklyPlanner from '../components/planner/WeeklyPlanner.jsx';
+import PageBanner from '../components/layout/PageBanner.jsx';
+import plannerBanner from '../assets/images/planner-banner.jpg';
 
 function Planner() {
   return (
     <div className="page">
-      <div className="page-header">
-        <div className="page-title-row">
-          <div>
-            <div className="page-title">Weekly planner</div>
-            <div className="page-subtitle">
-              See your meals for the whole week at a glance and keep days
-              balanced.
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageBanner
+        eyebrow="Plan the week"
+        title="See your week of meals in one place"
+        subtitle="Spread recipes across the week, stay flexible, and make dinner decisions easy."
+        image={plannerBanner}
+      />
       <WeeklyPlanner />
     </div>
   );

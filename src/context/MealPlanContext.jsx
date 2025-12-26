@@ -81,6 +81,64 @@ export function MealPlanProvider({ children }) {
     [ensureStructure, setWeeklyPlan]
   );
 
+  const moveMeal = useCallback(
+    (sourceDayKey, sourceIndex, targetDayKey, targetIndex) => {
+      if (!sourceDayKey || !targetDayKey) {
+        return;
+      }
+      setWeeklyPlan(previous => {
+        const base = ensureStructure(previous);
+        const sourceMeals = base[sourceDayKey] || [];
+        const targetMeals = base[targetDayKey] || [];
+
+        if (
+          !Array.isArray(sourceMeals) ||
+          sourceIndex == null ||
+          sourceIndex < 0 ||
+          sourceIndex >= sourceMeals.length
+        ) {
+          return base;
+        }
+
+        const nextSource = [...sourceMeals];
+        const [moved] = nextSource.splice(sourceIndex, 1);
+
+        if (!moved) {
+          return base;
+        }
+
+        if (sourceDayKey === targetDayKey) {
+          const nextTarget = nextSource;
+          const maxIndex = nextTarget.length;
+          const safeIndex =
+            typeof targetIndex === 'number' && targetIndex >= 0 && targetIndex <= maxIndex
+              ? targetIndex
+              : maxIndex;
+          nextTarget.splice(safeIndex, 0, moved);
+          return {
+            ...base,
+            [sourceDayKey]: nextTarget,
+          };
+        }
+
+        const nextTarget = [...targetMeals];
+        const maxIndex = nextTarget.length;
+        const safeIndex =
+          typeof targetIndex === 'number' && targetIndex >= 0 && targetIndex <= maxIndex
+            ? targetIndex
+            : maxIndex;
+        nextTarget.splice(safeIndex, 0, moved);
+
+        return {
+          ...base,
+          [sourceDayKey]: nextSource,
+          [targetDayKey]: nextTarget,
+        };
+      });
+    },
+    [ensureStructure, setWeeklyPlan]
+  );
+
   const regenerateShoppingList = useCallback(() => {
     const baseItems = aggregateIngredientsFromPlan(ensureStructure(weeklyPlan));
     setShoppingList(previousItems => {
@@ -126,6 +184,7 @@ export function MealPlanProvider({ children }) {
       shoppingList,
       addMealToDay,
       removeMealFromDay,
+      moveMeal,
       clearDay,
       clearAll,
       regenerateShoppingList,
@@ -138,6 +197,7 @@ export function MealPlanProvider({ children }) {
       clearDay,
       clearShoppingList,
       ensureStructure,
+      moveMeal,
       regenerateShoppingList,
       removeMealFromDay,
       shoppingList,

@@ -3,14 +3,22 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import { MealPlanProvider } from './context/MealPlanContext.jsx';
+import { FavoritesProvider } from './context/FavoritesContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import ThemeToggle from './components/layout/ThemeToggle.jsx';
 import './styles.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render( 
   <React.StrictMode>
-    <BrowserRouter>
-      <MealPlanProvider>
-        <App />
-      </MealPlanProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <MealPlanProvider>
+          <FavoritesProvider>
+            <ThemeToggle />
+            <App />
+          </FavoritesProvider>
+        </MealPlanProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>
 );

@@ -78,6 +78,7 @@ export function aggregateIngredientsFromPlan(weeklyPlan) {
 
   Object.values(weeklyPlan).forEach(dayMeals => {
     (dayMeals || []).forEach(meal => {
+      const mealId = meal && meal.id;
       (meal.ingredients || []).forEach(ingredient => {
         const baseName = ingredient.name;
         const normalizedName = normalizeIngredientName(baseName);
@@ -94,6 +95,7 @@ export function aggregateIngredientsFromPlan(weeklyPlan) {
             quantity: measurement.quantity,
             unit: measurement.unit,
             measures: ingredient.measure ? [ingredient.measure] : [],
+            _recipeIds: mealId != null ? new Set([mealId]) : new Set(),
           });
         } else {
           if (measurement.quantity != null && existing.quantity != null) {
@@ -102,10 +104,23 @@ export function aggregateIngredientsFromPlan(weeklyPlan) {
           if (ingredient.measure && !existing.measures.includes(ingredient.measure)) {
             existing.measures.push(ingredient.measure);
           }
+          if (mealId != null && existing._recipeIds) {
+            existing._recipeIds.add(mealId);
+          }
         }
       });
     });
   });
 
-  return Array.from(map.values());
+  return Array.from(map.values()).map(item => {
+    const recipeCount =
+      item._recipeIds && typeof item._recipeIds.size === 'number'
+        ? item._recipeIds.size
+        : null;
+    const { _recipeIds, ...rest } = item;
+    return {
+      ...rest,
+      recipeCount,
+    };
+  });
 }

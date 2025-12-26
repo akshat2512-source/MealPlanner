@@ -31,4 +31,7 @@ export const DAY_FULL_LABELS = {
 export const STORAGE_KEYS = {
   WEEKLY_PLAN: 'mealPlanner.weeklyPlan.v1',
   SHOPPING_LIST: 'mealPlanner.shoppingList.v1',
+  FAVORITES: 'mealPlanner.favorites.v1',
+  LAST_SEARCH_RESULTS: 'mealPlanner.lastSearchResults.v1',
+  LAST_SEARCH_QUERY: 'mealPlanner.lastSearchQuery.v1',
 };
