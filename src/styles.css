@@ -441,8 +441,7 @@ html[data-theme='dark'] .app-bottom-nav-link-active {
   border: 1px solid var(--color-border-subtle);
   font-size: 0.8rem;
   color: var(--color-text-soft);
-  transition: background var(--transition-fast), border var(--transition-fast),
-    color var(--transition-fast);
+  transition: background var(--transition-fast), border var(--transition-fast), color var(--transition-fast);
 }
 
 .theme-toggle:hover .theme-toggle-inner {
@@ -451,6 +450,10 @@ html[data-theme='dark'] .app-bottom-nav-link-active {
 
 .theme-toggle-icon {
   font-size: 0.95rem;
+}
+
+.theme-toggle-label {
+  font-size: 0.8rem;
 }
 
 html[data-theme='light'] .theme-toggle-inner {
@@ -568,16 +571,14 @@ html[data-theme='dark'] .theme-toggle-inner {
   border-radius: var(--radius-lg);
   border: 1px solid rgba(148, 163, 184, 0.45);
   box-shadow: var(--shadow-subtle);
-  transition: border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
 .surface-card:hover,
 .surface-card:focus-within {
   border-color: var(--color-primary-soft);
   box-shadow: var(--shadow-soft);
-  background: #ffffff;
+  background: var(--color-surface-soft);
 }
 
 .surface-inner {
@@ -690,8 +691,7 @@ html[data-theme='dark'] .filters-select {
   font-weight: 500;
   color: var(--color-text-soft);
   cursor: pointer;
-  transition: background-color var(--transition-fast),
-    border-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .popular-pill:hover {
@@ -718,8 +718,7 @@ html[data-theme='dark'] .popular-pill {
   font-size: 0.86rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast),
-    border-color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .button:hover {
@@ -826,9 +825,7 @@ html[data-theme='dark'] .button-danger {
   font-size: 0.95rem;
   outline: none;
   box-shadow: var(--shadow-subtle);
-  transition: border-color var(--transition-fast),
-    background-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .input-field::placeholder {
@@ -920,10 +917,7 @@ html[data-theme='dark'] .badge {
   background: #ffffff;
   border: 1px solid var(--color-border-subtle);
   cursor: pointer;
-  transition: background-color var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   box-shadow: var(--shadow-subtle);
 }
 
@@ -1393,10 +1387,7 @@ html[data-theme='dark'] .recipe-card-favorite-active {
   flex-direction: column;
   gap: 0.15rem;
   cursor: pointer;
-  transition: background-color var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   box-shadow: var(--shadow-subtle);
 }
 
@@ -1445,10 +1436,7 @@ html[data-theme='dark'] .recipe-card-favorite-active {
   border-radius: var(--radius-md);
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
-  transition: background-color var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   box-shadow: var(--shadow-subtle);
 }
 
@@ -1474,10 +1462,7 @@ html[data-theme='dark'] .recipe-card-favorite-active {
   border: 1px solid var(--color-border-subtle);
   background-color: transparent;
   accent-color: var(--color-primary);
-  transition: transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast),
-    border-color var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .shopping-checkbox:focus-visible {
@@ -1731,6 +1716,19 @@ html[data-theme='dark'] .recipe-card-favorite-active {
 
   .app-bottom-nav {
     display: flex;
+  }
+
+  .theme-toggle {
+    bottom: 5.25rem;
+    right: 1.25rem;
+  }
+
+  .theme-toggle-inner {
+    padding: 0.45rem;
+  }
+
+  .theme-toggle-label {
+    display: none;
   }
 
   .detail-bottom-cta {
