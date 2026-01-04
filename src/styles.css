@@ -102,7 +102,7 @@ body {
   top: 0;
   z-index: 20;
   background: #fff7ed;
-  border-bottom: 1px solid #fed7aa;
+  border-bottom: 1px solid #fee5aa;
 }
 
 html[data-theme='dark'] .app-header {
